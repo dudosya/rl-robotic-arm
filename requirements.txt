@@ -1,0 +1,28 @@
+# Requirements for rl-robotic-arm
+# Tested on Google Colab (Python 3.10, CUDA 12)
+#
+# Install with:
+#   pip install -r requirements.txt
+
+# MuJoCo physics + Fetch robot environment
+gymnasium-robotics>=1.2.0
+
+# RL framework (includes torch dependency)
+stable-baselines3[extra]>=2.3.0
+
+# Gymnasium compatibility shim (required by gymnasium-robotics)
+shimmy>=1.0.0
+
+# Numerical IK solver
+scipy>=1.11.0
+
+# Video recording
+imageio>=2.31.0
+imageio-ffmpeg>=0.4.9
+
+# Headless display for MuJoCo rendering on Colab
+pyvirtualdisplay>=3.0
+
+# Numerical / plotting (usually pre-installed on Colab, listed for completeness)
+numpy>=1.24.0
+matplotlib>=3.7.0

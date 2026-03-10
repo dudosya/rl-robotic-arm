@@ -51,6 +51,9 @@ coverage.xml
 .pytest_cache/
 cover/
 
+project_descr.md
+reach_rl.ipynb
+
 # Translations
 *.mo
 *.pot
