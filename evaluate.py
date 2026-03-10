@@ -27,7 +27,7 @@ def evaluate_policy(env, policy_fn, n_episodes: int = N_EVAL_EPISODES, seed: int
 
     Parameters
     ----------
-    env        : gymnasium environment (FetchReach-v3, dense reward)
+    env        : gymnasium environment (FetchPickAndPlace-v4, dense reward)
     policy_fn  : callable(obs) -> action
     n_episodes : int
     seed       : int  (episode i uses seed + i for reproducibility)
@@ -45,6 +45,9 @@ def evaluate_policy(env, policy_fn, n_episodes: int = N_EVAL_EPISODES, seed: int
         obs, _       = env.reset(seed=seed + ep)
         ep_reward    = 0.0
         terminated   = truncated = False
+        # Reset stateful policies (classical state machines) each episode
+        if hasattr(policy_fn, "reset"):
+            policy_fn.reset()
 
         while not (terminated or truncated):
             action                          = policy_fn(obs)
@@ -118,7 +121,7 @@ def plot_training_curve(classical_results: dict):
 
     ax.set_xlabel("Environment Steps", fontsize=13)
     ax.set_ylabel("Mean Episode Reward", fontsize=13)
-    ax.set_title("SAC Training Curve on FetchReach-v3 (dense reward)", fontsize=14)
+    ax.set_title("SAC Training Curve on FetchPickAndPlace-v4 (dense reward)", fontsize=14)
     ax.legend(fontsize=9, loc="lower right")
     ax.grid(True, alpha=0.3)
 
@@ -189,7 +192,7 @@ def plot_comparison_bar(results: dict):
         )
 
     fig.suptitle(
-        "FetchReach-v3  |  Classical IK vs. SAC Reinforcement Learning",
+        "FetchPickAndPlace-v4  |  Classical IK vs. SAC Reinforcement Learning",
         fontsize=13, fontweight="bold",
     )
 

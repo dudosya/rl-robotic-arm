@@ -1,5 +1,5 @@
 # =============================================================================
-# train_sac.py — SAC agent training for FetchReach-v3.
+# train_sac.py — SAC agent training for FetchPickAndPlace-v4.
 #
 # Exports:
 #   train(train_env, eval_env) -> SAC model
@@ -72,12 +72,12 @@ def train(train_env, eval_env):
     os.makedirs(LOG_DIR,   exist_ok=True)
 
     print("\n" + "=" * 60)
-    print("  SAC Training — FetchReach-v3 (dense reward)")
+    print("  SAC Training — FetchPickAndPlace-v4 (dense reward)")
     print("=" * 60)
     print(f"  Total timesteps : {TOTAL_TIMESTEPS:,}")
     print(f"  Eval every      : {EVAL_FREQ:,} steps  ({N_EVAL_TRAIN} episodes)")
     print(f"  Best model path : {os.path.join(MODEL_DIR, 'best_model')}")
-    print("  Estimated time  : ~25–45 min on Colab T4 GPU")
+    print("  Estimated time  : ~55–75 min on Colab T4 GPU")
     print("=" * 60 + "\n")
 
     model = build_model(train_env)

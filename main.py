@@ -11,11 +11,11 @@
 #   Edit config.py → set SKIP_TRAINING = True, then run again.
 #
 # Estimated runtime on Colab T4 GPU:
-#   Baseline evaluation  ~  5 min  (Scipy IK dominates)
-#   SAC training         ~ 30–45 min
+#   Baseline evaluation  ~  8 min  (Scipy IK dominates)
+#   SAC training         ~ 55–75 min
 #   Plots + Videos       ~  3 min
 #   ─────────────────────────────
-#   Total                ~ 40–55 min
+#   Total                ~ 65–85 min
 # =============================================================================
 
 import os
@@ -23,15 +23,20 @@ import warnings
 import numpy as np
 warnings.filterwarnings("ignore")
 
-# ── Virtual display (required for MuJoCo rendering on headless Colab) ─────────
-# pyvirtualdisplay must be started BEFORE importing mujoco/gymnasium
-from pyvirtualdisplay import Display
-_display = Display(visible=False, size=(800, 600))
-_display.start()
-print("Virtual display started.")
+# ── Virtual display ────────────────────────────────────────────────────────────
+# pyvirtualdisplay is Linux-only (X11). On Windows, MuJoCo renders natively so
+# we skip it entirely. On Colab/Linux it must start BEFORE importing mujoco.
+import platform as _platform
+if _platform.system() != "Windows":
+    from pyvirtualdisplay import Display
+    _display = Display(visible=False, size=(800, 600))
+    _display.start()
+    print("Virtual display started.")
+else:
+    print("Windows detected — skipping virtual display (MuJoCo renders natively).")
 
 import gymnasium
-import gymnasium_robotics   # noqa: F401 — registers FetchReach-v3
+import gymnasium_robotics   # noqa: F401 — registers FetchPickAndPlace-v4
 import mujoco
 import stable_baselines3
 
@@ -49,7 +54,7 @@ np.random.seed(config.SEED)
 # ── Print version info ────────────────────────────────────────────────────────
 print("\n" + "=" * 60)
 print("  RL vs. Classical IK for Robotic Arm Control")
-print("  FetchReach-v3 (MuJoCo)")
+print("  FetchPickAndPlace-v4 (MuJoCo)")
 print("=" * 60)
 print(f"  MuJoCo              : {mujoco.__version__}")
 print(f"  gymnasium-robotics  : {gymnasium_robotics.__version__}")
@@ -74,7 +79,7 @@ print("  Step 1/4 — Evaluating classical baselines")
 print("─" * 60)
 
 def make_env():
-    """Create a standard FetchReach-v3 env (no render mode)."""
+    """Create a standard FetchPickAndPlace-v4 env (no render mode)."""
     return gymnasium.make(
         config.ENV_ID,
         reward_type=config.REWARD_TYPE,

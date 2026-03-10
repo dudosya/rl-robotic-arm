@@ -38,6 +38,8 @@ def record_episode(env, policy_fn, max_steps: int = MAX_EPISODE_STEPS, seed: int
     """
     frames = []
     obs, _ = env.reset(seed=seed)
+    if hasattr(policy_fn, "reset"):
+        policy_fn.reset()
 
     for _ in range(max_steps):
         action               = policy_fn(obs)
@@ -51,7 +53,7 @@ def record_episode(env, policy_fn, max_steps: int = MAX_EPISODE_STEPS, seed: int
     return frames
 
 
-def save_video(frames: list, path: str, fps: int = 20):
+def save_video(frames: list, path: str, fps: int = 8):
     """Write a list of RGB frames to an mp4 file.
 
     Parameters

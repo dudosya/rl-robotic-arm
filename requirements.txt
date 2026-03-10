@@ -20,7 +20,8 @@ scipy>=1.11.0
 imageio>=2.31.0
 imageio-ffmpeg>=0.4.9
 
-# Headless display for MuJoCo rendering on Colab
+# Headless display for MuJoCo rendering on Colab / Linux only.
+# Skip this on Windows — MuJoCo renders natively there.
 pyvirtualdisplay>=3.0
 
 # Numerical / plotting (usually pre-installed on Colab, listed for completeness)

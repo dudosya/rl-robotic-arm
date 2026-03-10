@@ -9,9 +9,9 @@ import os
 SEED = 42
 
 # ── Environment ───────────────────────────────────────────────────────────────
-ENV_ID            = "FetchReach-v3"
+ENV_ID            = "FetchPickAndPlace-v4"
 REWARD_TYPE       = "dense"   # "dense" converges faster; avoids need for HER
-MAX_EPISODE_STEPS = 50
+MAX_EPISODE_STEPS = 100       # pick-and-place needs more steps than reach
 
 # ── Evaluation ────────────────────────────────────────────────────────────────
 N_EVAL_EPISODES = 30          # episodes per method for the final comparison
@@ -34,17 +34,17 @@ ARM_JOINT_NAMES = [
 ]
 
 # Scipy IK: max L-BFGS-B iterations per environment step
-SCIPY_MAX_ITER = 25
+SCIPY_MAX_ITER = 20
 
 # ── SAC training ──────────────────────────────────────────────────────────────
-TOTAL_TIMESTEPS = 150_000
+TOTAL_TIMESTEPS = 500_000
 LEARNING_RATE   = 1e-3
 BATCH_SIZE      = 256
-BUFFER_SIZE     = 200_000
-LEARNING_STARTS = 1_000
+BUFFER_SIZE     = 500_000
+LEARNING_STARTS = 2_000
 TAU             = 0.005
 GAMMA           = 0.98
-EVAL_FREQ       = 5_000       # evaluate every N env steps during training
+EVAL_FREQ       = 10_000      # evaluate every N env steps during training
 N_EVAL_TRAIN    = 20          # episodes per checkpoint evaluation
 
 # ── Output directories ────────────────────────────────────────────────────────
@@ -56,5 +56,5 @@ PLOT_DIR   = os.path.join(OUTPUT_DIR, "plots")
 
 # ── Control flags ─────────────────────────────────────────────────────────────
 # Set SKIP_TRAINING = True to load the existing checkpoint and skip the
-# ~40-min SAC training phase (useful for re-running plots/videos after training).
+# ~60-min SAC training phase (useful for re-running plots/videos after training).
 SKIP_TRAINING = False
