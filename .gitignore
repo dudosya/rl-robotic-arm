@@ -53,6 +53,7 @@ cover/
 
 project_descr.md
 reach_rl.ipynb
+outputs/
 
 # Translations
 *.mo

@@ -10,6 +10,9 @@ gymnasium-robotics>=1.2.0
 # RL framework (includes torch dependency)
 stable-baselines3[extra]>=2.3.0
 
+# TQC (Truncated Quantile Critics) — outperforms SAC on FetchPickAndPlace
+sb3-contrib>=2.3.0
+
 # Gymnasium compatibility shim (required by gymnasium-robotics)
 shimmy>=1.0.0
 

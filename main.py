@@ -12,10 +12,13 @@
 #
 # Estimated runtime on Colab T4 GPU:
 #   Baseline evaluation  ~  8 min  (Scipy IK dominates)
-#   SAC training         ~ 55–75 min
+#   TQC training         ~ 150–180 min  (1M steps, checkpoints every 100K)
 #   Plots + Videos       ~  3 min
 #   ─────────────────────────────
-#   Total                ~ 65–85 min
+#   Total                ~ 2.5–3.5 h
+#
+# If Colab disconnects mid-training, set SKIP_TRAINING = True and load
+# the latest outputs/models/tqc_checkpoint_XXXXXX_steps.zip manually.
 # =============================================================================
 
 import os
@@ -133,11 +136,12 @@ print_results_table(classical_results)
 # =============================================================================
 print("─" * 60)
 if config.SKIP_TRAINING:
-    print("  Step 2/4 — Loading existing SAC checkpoint (SKIP_TRAINING=True)")
+    print("  Step 2/4 — Loading existing TQC checkpoint (SKIP_TRAINING=True)")
     print("─" * 60)
-    sac_model = load_best_model()
+    _env_for_load = make_env()
+    sac_model = load_best_model(env=_env_for_load)
 else:
-    print("  Step 2/4 — Training SAC agent")
+    print("  Step 2/4 — Training TQC agent")
     print("─" * 60)
     train_env = Monitor(make_env())
     eval_env  = Monitor(make_env())
@@ -167,7 +171,7 @@ env.close()
 print(f"  mean_reward={mr:.3f}  success_rate={sr:.1%}")
 
 all_results = dict(classical_results)
-all_results["SAC (150k steps)"] = (mr, sr)
+all_results["TQC (1M steps)"] = (mr, sr)
 
 print_results_table(all_results)
 plot_comparison_bar(all_results)

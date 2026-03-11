@@ -10,7 +10,7 @@ SEED = 42
 
 # ── Environment ───────────────────────────────────────────────────────────────
 ENV_ID            = "FetchPickAndPlace-v4"
-REWARD_TYPE       = "dense"   # "dense" converges faster; avoids need for HER
+REWARD_TYPE       = "sparse"  # sparse reward is required for HER to work correctly
 MAX_EPISODE_STEPS = 100       # pick-and-place needs more steps than reach
 
 # ── Evaluation ────────────────────────────────────────────────────────────────
@@ -36,16 +36,24 @@ ARM_JOINT_NAMES = [
 # Scipy IK: max L-BFGS-B iterations per environment step
 SCIPY_MAX_ITER = 20
 
-# ── SAC training ──────────────────────────────────────────────────────────────
-TOTAL_TIMESTEPS = 500_000
+# ── HER (Hindsight Experience Replay) ───────────────────────────────────────────
+HER_N_SAMPLED_GOAL = 4        # goals relabelled per real transition (paper default)
+HER_GOAL_STRATEGY  = "future" # use a later state in the same episode as the fake goal
+
+# ── TQC training — RL Baselines Zoo defaults for FetchPickAndPlace + HER ─────
+# Reference: https://github.com/DLR-RM/rl-baselines3-zoo hyperparams/her.yml
+TOTAL_TIMESTEPS = 1_000_000  # 1M is the standard benchmark target
 LEARNING_RATE   = 1e-3
-BATCH_SIZE      = 256
-BUFFER_SIZE     = 500_000
-LEARNING_STARTS = 2_000
-TAU             = 0.005
-GAMMA           = 0.98
-EVAL_FREQ       = 10_000      # evaluate every N env steps during training
-N_EVAL_TRAIN    = 20          # episodes per checkpoint evaluation
+BATCH_SIZE      = 1024          # Zoo default for TQC+HER on FetchPickAndPlace
+BUFFER_SIZE     = 1_000_000     # HER needs a larger buffer to store relabelled transitions
+LEARNING_STARTS = 1_000
+TAU             = 0.05
+GAMMA           = 0.95
+N_CRITICS       = 2             # TQC uses an ensemble of critics (n_critics=2 per Zoo)
+NET_ARCH        = [512, 512, 512]  # Zoo uses [512,512,512] for TQC on pick-and-place
+EVAL_FREQ       = 10_000        # evaluate every N env steps during training
+N_EVAL_TRAIN    = 20            # episodes per checkpoint evaluation
+CHECKPOINT_FREQ = 100_000       # save a full checkpoint every N steps (Colab crash safety)
 
 # ── Output directories ────────────────────────────────────────────────────────
 OUTPUT_DIR = "outputs"
