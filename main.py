@@ -48,23 +48,21 @@ from stable_baselines3.common.monitor import Monitor
 import config
 
 # ── Google Drive backup (Colab only) ─────────────────────────────────────────
-# When running on Google Colab, redirect all outputs to Google Drive so that
-# model checkpoints, logs, plots and videos survive a session disconnect.
-# On Windows / local Linux this block is skipped and 'outputs/' is used instead.
-import sys as _sys
-if 'google.colab' in _sys.modules:
-    try:
-        from google.colab import drive as _drive
-        _drive.mount('/content/drive')
-        _DRIVE_ROOT = '/content/drive/MyDrive/rl-robotic-arm-outputs'
-        config.OUTPUT_DIR = _DRIVE_ROOT
-        config.MODEL_DIR  = os.path.join(_DRIVE_ROOT, 'models')
-        config.LOG_DIR    = os.path.join(_DRIVE_ROOT, 'logs')
-        config.VIDEO_DIR  = os.path.join(_DRIVE_ROOT, 'videos')
-        config.PLOT_DIR   = os.path.join(_DRIVE_ROOT, 'plots')
-        print(f'Google Drive mounted. All outputs -> {_DRIVE_ROOT}')
-    except Exception as _e:
-        print(f'Warning: Drive mount failed ({_e}). Saving to local VM disk instead.')
+# Mount Drive from the Colab notebook cell BEFORE running main.py and set:
+#   import os; os.environ['RL_OUTPUT_DIR'] = '/content/drive/MyDrive/rl-robotic-arm-outputs'
+# main.py inherits env vars from the notebook kernel, so this works reliably
+# even though main.py runs in a subprocess. On Windows / local Linux the var
+# is not set so 'outputs/' is used as normal.
+_DRIVE_ROOT = os.environ.get('RL_OUTPUT_DIR')
+if _DRIVE_ROOT:
+    config.OUTPUT_DIR = _DRIVE_ROOT
+    config.MODEL_DIR  = os.path.join(_DRIVE_ROOT, 'models')
+    config.LOG_DIR    = os.path.join(_DRIVE_ROOT, 'logs')
+    config.VIDEO_DIR  = os.path.join(_DRIVE_ROOT, 'videos')
+    config.PLOT_DIR   = os.path.join(_DRIVE_ROOT, 'plots')
+    print(f'Google Drive output dir set. All outputs -> {_DRIVE_ROOT}')
+else:
+    print(f'Using local output dir: {config.OUTPUT_DIR}')
 
 from baselines  import RandomPolicy, PController, JacobianPinvPolicy, ScipyIKPolicy
 from train_sac  import train, load_best_model
