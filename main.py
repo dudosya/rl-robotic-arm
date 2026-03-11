@@ -46,6 +46,26 @@ import stable_baselines3
 from stable_baselines3.common.monitor import Monitor
 
 import config
+
+# ── Google Drive backup (Colab only) ─────────────────────────────────────────
+# When running on Google Colab, redirect all outputs to Google Drive so that
+# model checkpoints, logs, plots and videos survive a session disconnect.
+# On Windows / local Linux this block is skipped and 'outputs/' is used instead.
+import sys as _sys
+if 'google.colab' in _sys.modules:
+    try:
+        from google.colab import drive as _drive
+        _drive.mount('/content/drive')
+        _DRIVE_ROOT = '/content/drive/MyDrive/rl-robotic-arm-outputs'
+        config.OUTPUT_DIR = _DRIVE_ROOT
+        config.MODEL_DIR  = os.path.join(_DRIVE_ROOT, 'models')
+        config.LOG_DIR    = os.path.join(_DRIVE_ROOT, 'logs')
+        config.VIDEO_DIR  = os.path.join(_DRIVE_ROOT, 'videos')
+        config.PLOT_DIR   = os.path.join(_DRIVE_ROOT, 'plots')
+        print(f'Google Drive mounted. All outputs -> {_DRIVE_ROOT}')
+    except Exception as _e:
+        print(f'Warning: Drive mount failed ({_e}). Saving to local VM disk instead.')
+
 from baselines  import RandomPolicy, PController, JacobianPinvPolicy, ScipyIKPolicy
 from train_sac  import train, load_best_model
 from evaluate   import evaluate_policy, print_results_table, plot_training_curve, plot_comparison_bar

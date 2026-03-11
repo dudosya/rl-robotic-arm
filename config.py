@@ -51,8 +51,8 @@ TAU             = 0.05
 GAMMA           = 0.95
 N_CRITICS       = 2             # TQC uses an ensemble of critics (n_critics=2 per Zoo)
 NET_ARCH        = [512, 512, 512]  # Zoo uses [512,512,512] for TQC on pick-and-place
-EVAL_FREQ       = 10_000        # evaluate every N env steps during training
-N_EVAL_TRAIN    = 20            # episodes per checkpoint evaluation
+EVAL_FREQ       = 20_000        # evaluate every N env steps during training
+N_EVAL_TRAIN    = 10            # episodes per checkpoint evaluation
 CHECKPOINT_FREQ = 100_000       # save a full checkpoint every N steps (Colab crash safety)
 
 # ── Output directories ────────────────────────────────────────────────────────
